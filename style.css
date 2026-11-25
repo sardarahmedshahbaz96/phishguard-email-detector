@@ -1,0 +1,27 @@
+/* Glassmorphism utility base configurations */
+.glass-card {
+  background: rgba(22, 17, 39, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Custom styling updates to scrollbar mechanisms for flags rendering */
+#flagsList::-webkit-scrollbar {
+  width: 4px;
+}
+#flagsList::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 99px;
+}
+#flagsList::-webkit-scrollbar-thumb {
+  background: rgba(181, 95, 230, 0.3);
+  border-radius: 99px;
+}
+#flagsList::-webkit-scrollbar-thumb:hover {
+  background: rgba(181, 95, 230, 0.6);
+}
+
+/* Fluid responsive transitions for scaling items smoothly */
+header, button, textarea, .glass-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

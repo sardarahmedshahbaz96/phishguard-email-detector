@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhishGuard — Information Assurance Project</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#0b0813] text-gray-100 min-h-screen relative overflow-x-hidden font-sans flex flex-col">
+
+  <div class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-[#b55fe6]/10 blur-[120px] pointer-events-none"></div>
+  <div class="absolute top-[20%] right-[-10%] w-[45vw] h-[45vw] rounded-full bg-[#f43f5e]/10 blur-[150px] pointer-events-none"></div>
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.15)_1px,transparent_1px)] [background-size:32px_32px] opacity-30 pointer-events-none"></div>
+
+  <h2 class="sr-only">Phishing Email Detector — paste email content to analyze for risk.</h2>
+
+  <header class="border-b border-white/5 bg-[#0b0813]/40 px-6 py-5 backdrop-blur-md relative z-10">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2 font-bold text-xl tracking-tight text-white group cursor-default">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#b55fe6] to-[#f43f5e] flex items-center justify-center text-white shadow-[0_0_15px_rgba(181,95,230,0.4)]">
+          <i data-lucide="shield-lock" class="w-5 h-5"></i>
+        </div>
+        <span>Phish<span class="text-[#b55fe6]">Guard</span></span>
+      </div>
+      
+      <span class="px-4 py-1.5 rounded-full bg-purple-950/40 border border-[#b55fe6]/30 text-xs text-purple-300 font-semibold tracking-wide">
+        Information Assurance — Term Project
+      </span>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-12 flex-1 w-full flex flex-col justify-center relative z-10">
+    
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <h1 class="text-3xl sm:text-4xl font-black text-white tracking-tight mb-3">
+        Phishing Email <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#b55fe6] to-pink-500">Detector</span>
+      </h1>
+      <p class="text-gray-400 text-sm sm:text-base">
+        Paste any email content below to instantly analyze it for suspicious indicators, social engineering hooks, and security risk factors.
+      </p>
+    </div>
+
+    <div class="grid lg:grid-cols-12 gap-6 items-start">
+      
+      <div class="lg:col-span-7 flex flex-col gap-5 p-6 rounded-3xl glass-card border border-white/10 relative shadow-2xl backdrop-blur-xl">
+        <div>
+          <label class="flex items-center gap-2 text-xs font-bold text-purple-300 uppercase tracking-widest mb-3">
+            <i data-lucide="mail" class="w-4 h-4 text-[#b55fe6]"></i> Email Content
+          </label>
+          <textarea id="emailInput" class="w-full h-64 p-4 rounded-2xl bg-black/40 border border-white/5 focus:border-[#b55fe6]/50 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#b55fe6]/50 transition-all resize-none font-mono leading-relaxed" placeholder="Paste the email content here (headers, subject, body)..."></textarea>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button id="analyzeBtn" class="flex-1 py-3 px-4 rounded-xl font-semibold text-sm text-white bg-gradient-to-r from-[#b55fe6] to-purple-600 hover:from-purple-600 hover:to-[#b55fe6] shadow-lg shadow-purple-950/50 flex items-center justify-center gap-2 transition-all group">
+            <i data-lucide="scan" class="w-4 h-4 group-hover:rotate-90 transition-transform"></i> Analyze Email
+          </button>
+          <button id="clearBtn" class="py-3 px-4 rounded-xl font-medium text-sm text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 flex items-center justify-center gap-2 transition-all">
+            <i data-lucide="trash-2" class="w-4 h-4"></i> Clear
+          </button>
+        </div>
+      </div>
+
+      <div id="resultSection" class="lg:col-span-5 p-6 rounded-3xl glass-card border border-white/10 flex flex-col gap-5 bg-[#120e24]/40 backdrop-blur-xl shadow-2xl">
+        
+        <div class="flex items-center gap-4">
+          <div id="scoreCircle" class="relative w-16 h-16 rounded-full border-4 border-white/5 flex flex-col items-center justify-center bg-black/30 shrink-0">
+            <span id="scoreNum" class="text-xl font-black text-white leading-none">0</span>
+            <span class="text-[9px] text-gray-500 font-bold uppercase tracking-wide mt-0.5">/ 100</span>
+          </div>
+          <div>
+            <div id="riskTag" class="px-2 py-0.5 inline-block text-[10px] font-bold rounded bg-white/5 text-gray-400 uppercase tracking-widest mb-1">—</div>
+            <p id="riskDesc" class="text-xs text-gray-400 font-medium leading-tight">—</p>
+          </div>
+        </div>
+
+        <div class="w-full h-1.5 rounded-full bg-white/5 overflow-hidden">
+          <div id="meterFill" class="h-full w-0 bg-gradient-to-r from-emerald-500 via-yellow-500 to-red-500 transition-all duration-500"></div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2">
+          <div class="p-3 rounded-xl bg-black/40 border border-white/5 text-center">
+            <div id="statScore" class="text-lg font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400">0</div>
+            <div class="text-[9px] uppercase tracking-wider text-gray-500 font-semibold mt-0.5">Risk Score</div>
+          </div>
+          <div class="p-3 rounded-xl bg-black/40 border border-white/5 text-center">
+            <div id="statFlags" class="text-lg font-black text-[#f43f5e]">0</div>
+            <div class="text-[9px] uppercase tracking-wider text-gray-500 font-semibold mt-0.5">Red Flags</div>
+          </div>
+          <div class="p-3 rounded-xl bg-black/40 border border-white/5 text-center">
+            <div id="statKeywords" class="text-lg font-black text-[#b55fe6]">0</div>
+            <div class="text-[9px] uppercase tracking-wider text-gray-500 font-semibold mt-0.5">Keywords</div>
+          </div>
+        </div>
+
+        <div id="flagsList" class="empty:hidden flex flex-col gap-1.5 max-h-[140px] overflow-y-auto pr-1"></div>
+
+        <div id="actionBox" class="p-3.5 rounded-xl bg-purple-950/20 border border-purple-500/20 text-[11px] text-purple-300 leading-normal">
+          <p id="actionText" class="font-medium text-center">Awaiting data parsing context sequence...</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    // Render the initial Lucide dashboard icons
+    lucide.createIcons();
+
+    // DOM Element hooks
+    const emailInput = document.getElementById('emailInput');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    
+    const scoreNum = document.getElementById('scoreNum');
+    const riskTag = document.getElementById('riskTag');
+    const riskDesc = document.getElementById('riskDesc');
+    const meterFill = document.getElementById('meterFill');
+    const statScore = document.getElementById('statScore');
+    const statFlags = document.getElementById('statFlags');
+    const statKeywords = document.getElementById('statKeywords');
+    const flagsList = document.getElementById('flagsList');
+    const actionText = document.getElementById('actionText');
+
+    // Asynchronous communication to python Flask backend
+    analyzeBtn.addEventListener('click', async () => {
+      const emailText = emailInput.value;
+      if (!emailText.trim()) {
+        alert('Please paste some email content to evaluate.');
+        return;
+      }
+
+      try {
+        const response = await fetch('/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: emailText })
+        });
+
+        if (!response.ok) throw new Error('Network response fault.');
+        const data = await response.json();
+
+        // Update Numerical metrics
+        scoreNum.innerText = data.score;
+        statScore.innerText = data.score;
+        statFlags.innerText = data.issues.length;
+
+        // Calculate and iterate total matched keywords from arrays
+        let keywordCount = 0;
+        flagsList.innerHTML = ''; // Reset flag tray
+
+        data.issues.forEach(issue => {
+          keywordCount += issue.matched_keywords.length;
+
+          // Append dynamic flag alert items into container
+          const item = document.createElement('div');
+          item.className = "p-2 rounded-xl bg-red-950/20 border border-red-500/20 text-xs text-red-300 flex flex-col gap-0.5";
+          item.innerHTML = `
+            <div class="flex justify-between font-semibold">
+              <span>⚠️ ${issue.flag}</span>
+              <span class="text-red-400 font-mono">+${issue.points} pts</span>
+            </div>
+            <div class="text-[10px] text-gray-400 font-mono overflow-hidden text-ellipsis whitespace-nowrap">
+              Matched: ${issue.matched_keywords.join(', ')}
+            </div>
+          `;
+          flagsList.appendChild(item);
+        });
+        statKeywords.innerText = keywordCount;
+
+        // Split backend string tags like "HIGH RISK - Likely Phishing" to style UI beautifully
+        const riskParts = data.risk_level.split(' - ');
+        riskTag.innerText = riskParts[0];
+        riskDesc.innerText = riskParts[1] || '';
+
+        // Animate progress meter bar and adapt badge colors based on severity tier
+        meterFill.style.width = `${data.score}%`;
+
+        if (data.score >= 70) {
+          riskTag.className = "px-2 py-0.5 inline-block text-[10px] font-bold rounded bg-red-500/20 text-red-400 uppercase tracking-widest mb-1";
+          actionText.innerHTML = "🚨 <b>CRITICAL RISK:</b> Do NOT click any links or provide details. Delete immediately.";
+        } else if (data.score >= 40) {
+          riskTag.className = "px-2 py-0.5 inline-block text-[10px] font-bold rounded bg-yellow-500/20 text-yellow-400 uppercase tracking-widest mb-1";
+          actionText.innerHTML = "⚠️ <b>WARNING:</b> Exercise absolute caution. Verify the origin address before replying.";
+        } else {
+          riskTag.className = "px-2 py-0.5 inline-block text-[10px] font-bold rounded bg-emerald-500/20 text-emerald-400 uppercase tracking-widest mb-1";
+          actionText.innerHTML = "✅ <b>PROBABLY SAFE:</b> No high-severity red flags were recorded.";
+        }
+
+      } catch (err) {
+        console.error("Transmission error:", err);
+        alert('Could not establish data bridge connection to backend server.');
+      }
+    });
+
+    // Reset interface back to initial clean context states
+    clearBtn.addEventListener('click', () => {
+      emailInput.value = '';
+      scoreNum.innerText = '0';
+      statScore.innerText = '0';
+      statFlags.innerText = '0';
+      statKeywords.innerText = '0';
+      meterFill.style.width = '0%';
+      riskTag.innerText = '—';
+      riskTag.className = "px-2 py-0.5 inline-block text-[10px] font-bold rounded bg-white/5 text-gray-400 uppercase tracking-widest mb-1";
+      riskDesc.innerText = '—';
+      flagsList.innerHTML = '';
+      actionText.innerHTML = 'Awaiting data parsing context sequence...';
+    });
+  </script>
+</body>
+</html>
